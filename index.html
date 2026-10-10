@@ -89,8 +89,8 @@ video{width:100%;max-height:60vh;background:#000;border-radius:12px}
 <div class="sheet hide" id="menu"><div class="in">
  <h2 class="big">เมนู</h2>
  <div class="card"><b>ซิงค์ Google Sheets (ทุกเครื่องเห็นผลร่วมกัน)</b>
-  <input id="cfgUrl" placeholder="URL ของ Apps Script (https://script.google.com/...)" style="margin-top:8px">
-  <input id="cfgKey" placeholder="รหัสทีม" style="margin-top:8px">
+  <input id="cfgUrl" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="URL ของ Apps Script (https://script.google.com/...)" style="margin-top:8px">
+  <input id="cfgKey" placeholder="รหัสทีม" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" style="margin-top:8px">
   <div class="row" style="margin-top:8px"><button id="cfgSave">บันทึก/ทดสอบการเชื่อมต่อ</button><button class="g" id="syncNow">ซิงค์เดี๋ยวนี้</button></div>
   <div id="cfgRes" class="mut" style="margin-top:6px"></div></div>
  <div class="card"><b>ส่งออกผลสำรวจ</b>
@@ -157,10 +157,12 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const KEY='eaf_survey_v1';
 /* ตั้งค่าซิงค์ Google Sheets: วาง URL ของ Apps Script และรหัสทีมที่นี่ได้ (หรือกรอกในแอพ ⋯ เมนู) */
-const CFG_URL='';
+const CFG_URL='https://script.google.com/macros/s/AKfycbwHeKpVpbHrz-MmtcxTCCksyctvgW9daZ5DQqUKPCgJxZHhkLGzZdLs4J9XgH3sofbm/exec';
 const CFG_KEY='';
 function load(){try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j){S=Object.assign({who:'',recs:{},q:[],cfg:{url:'',key:''}},j)}}catch(e){}
-  if(!S.cfg.url&&CFG_URL){S.cfg.url=CFG_URL;S.cfg.key=CFG_KEY}}
+  if(!S.cfg.url&&CFG_URL){S.cfg.url=CFG_URL;S.cfg.key=CFG_KEY}
+  try{const k=new URLSearchParams(location.search).get('k');
+    if(k){S.cfg.key=k.trim();Object.keys(S.recs).forEach(i=>enq(i));persist();history.replaceState(null,'',location.pathname)}}catch(e){}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 const now=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`};
 const who=()=>S.who||'(ไม่ระบุชื่อ)';
